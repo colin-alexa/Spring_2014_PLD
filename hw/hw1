@@ -1,0 +1,36 @@
+hw 1: 1.1, 1.2, 1.3, 1.4, 1.10
+
+1.1 - 
+  a) Eiffel was designed as a fairly high-level OO language. All computation occurs within classes,
+     which relates it to Java and Smalltalk, other highly-object oriented languages. It supports contract-base programming,
+     where a unit of computation may be supplied with preconditions and postconditions which it is guaranteed to maintain.
+  
+  b) Perl was designed and is used for many different kinds of programming tasks. The language does not enforce any particular paradigm.
+     One noteable aspect of Perl which is immediately obvious upon looking at the code is that variable names are always prepended with a
+     "sigil" which marks the identifier as a: being a variable identifier, and b: with the type of the contained data. This allows identifiers
+     to be conveniently interpolated with string literals, which plays into Perl's reputation as a powerful text-processing language.
+     The common implementation is an interpreter, which is included on many linux systems.
+     
+  c) Python is a relatively young multiparadigm language which is designed to make program development simple and quick.
+     The language is dynamically typed, which can lead to difficult-to-find errors, but which makes programs simpler and easy to draft.
+     Python provides some support for imperative, object-oriented, and functional programming styles, with largely C-like imperative style
+     but with rich support for user-defined types and inheritance as well as first-class functions and a few functional staples like map()
+     and an immutable list type tuple.
+     
+1.2 -
+  if( ptr = malloc( strlen(argv[i]) * sizeof(char) && strcpy(ptr, argv[i++]) ){ }
+  else return 1;
+  
+  could be:
+  
+  ptr = malloc( strlen(argv[i]) * sizeof(char);
+  if (ptr == NULL)
+    return 1;
+  
+  strcpy(ptr, argv[i]);
+  ++i;
+  
+1.3 -
+  a)
+  
+  b)
