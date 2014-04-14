@@ -60,13 +60,30 @@ hw 1: 1.1, 1.2, 1.3, 1.4, 1.10
    in an english-like way as well, so that the operator "x not in y" is the negation of "x in y".
    
   Clarity about binding
+   Java and Python have similar schemes for binding, although Python is purely interpreted as opposed to Java's compile-to-bytecode scheme.
+   Python also allows the explicit definition of "generators", which are functions and data structures whose value isn't bound until they are
+   evaluated.
   
   Reliability
+   Java and python are both very reliable; the canonical implementations are available on most systems, and there are a variety of other imlementations
+   which generally follow the language specs well.
   
   Support
+   Java is hugely popular as a development language and is backed by the Sun/Oracle corporation, so it's got like, hella support. Python is hugely
+   popular and has one of the most accessible language references I've ever seen.
   
   Abstraction
+   Java supplies tools for object oriented abstraction, along with a vary large standard library and a well developed packaging system. Python is even
+   further abstracted by its dynamic typing.
   
   Orthogonality
+   Java is not particularly orthogonal in its design; while most of the language can be explained as interactions between objects, the "primitive" types
+   are essentially the same as C types, and Array types are in a strange limbo between being an object and being a primitive type.
   
   Efficient implementation
+   Both Python and Java pay a price for their high levels of abstraction, being multiple times slower than C for many tasks. Java's main implementation,
+   the Sunspot JVM, employs a variety of innovations in interpreter technology, such as just in time compilation, to substantially improve speed
+   compared to older JVMs. The primary Python implementation, CPython, is quick but not THAT quick. There is an implementation called PyPy which uses
+   many of the same methods as the Sunspot JVM to improve performance. One advantage to Python in terms of efficiency is that much of the standard
+   library is actually C code, and the CPython implementation allows relatively easy extension using C.
+   
