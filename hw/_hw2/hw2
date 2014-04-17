@@ -11,10 +11,7 @@
  Int => Int Digit => Int 0 => Int Digit 0 => Int 2 0 => Int Digit 2 0 => Int 5 2 0 => Digit 5 2 0 =>
    4 5 2 0
    
-2.5 - None of the given expressions are grammatical given the grammar in figure 2.7. Each of them would require some sequence of
-       rewrites equivalent to a symbol containing a itself, which the grammar only allows in one case -- a Primary may be composed
-       of an Expression surrounded by parantheses. All of the given expressions could be made correct by including parentheses, but
-       otherwise would require a recursive rule which does not exist.
+2.5 - Included in files 2.5a.png, 2.5b.png, 2.5c.png
  a.) x = x + a - 1; 
  b.) a = b * c / d;
  c.) i = i + j * k - 3;
@@ -25,7 +22,8 @@
  ifStatement ::= if ( _expression_ ) _statement_ fi | if ( _expression_ ) _statement_ fi else _statement_
  
 2.15 - in EBNF [] denotes a single optional symbol or sequence of symbols, so the translation rule to BNF would be:
-	  c ::= a [ b ] => c ::= a | a b
+	  <c> ::= a [ b ] => <c> ::= a | a b
        {} denote zero or more occurences of the enclosed portion, so the translation rule would be:
-          c ::= a { b } => c ::= a | c b
+          <c> ::= a { b } => <c> ::= a | <c> b
           
+2.20 - 
