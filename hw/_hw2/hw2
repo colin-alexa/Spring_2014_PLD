@@ -25,5 +25,3 @@
 	  <c> ::= a [ b ] => <c> ::= a | a b
        {} denote zero or more occurences of the enclosed portion, so the translation rule would be:
           <c> ::= a { b } => <c> ::= a | <c> b
-          
-2.20 - 
