@@ -10,9 +10,29 @@
 3.2 - now as left regular
  Identifier ::= <Identifier> ( a |...| Z | 0 |...| 9 ) | ( a |...| Z )
  
- Float ::= <Float>( 0 |...| 9 ) | <int>.( 0 |...| 9 )
+ Float ::= <Float>( 0 |...| 9 ) | <Int>.( 0 |...| 9 )
  Int ::= ( 0 |...| 9 ) | <Int>( 0 |...| 9 )
  
 3.3 - see 3.3.png
 
-3.4 - 
+3.4 - try to define {b^n a^n} with a regular grammar.
+ So, it's well known that this cannot be done; still, I'm going to try and explore
+ why it maybe cannot be done. I think that the essential problem is that there's no way to write a
+ symmetrical rule. You must always expand in one direction, either right or left, and in many senses
+ you lose all context in between rewritings. It is trivial to write a grammar for this langauge given
+ that you may put a nonterminal IN THE MIDDLE of a rule:
+ S ::= ab | a<S>b
+  
+3.10 - Describe scientific notation floating point numbers with a.) a regular grammar, b.) a regular
+           expression, and c.) a DFSA
+           
+ a.) SN ::= ( 0 |...| 9 )<SN> | ( 0 |...| 9 ).<F'>
+     F' ::= ( 0 |...| 9 )<F'> | ( 0 |...| 9 )e[-]<Int>
+     Int ::= ( 0 |...| 9 ) | <Int>( 0 |...| 9 )
+ b.) [0-9]*.[0-9]*(e-?[0-9]+)
+ c.) in 3.10c.png
+ 
+3.16 
+ a.) see 3.16a.png
+ b.) S     ( ) a
+     T     , ( ) a
