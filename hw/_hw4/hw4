@@ -1,1 +1,81 @@
 4.1, 4.2, 4.3, 4.5, 4.6
+
+4.1 - Perl
+a.) Declaration before use:
+  Perl will allow variables to be used before they are declared by default, although there is a keyword
+  "use strict" which changes this functionality (among others).
+b.) Overloading of operators for programmer-defined types:
+  Perl allows the programmer to overload any operator for user-defined types.
+c.) Binding time of array size:
+  Perl has dynamically sized arrays, so the size is bound at runtime.
+d.) What constitutes a 'scope':
+  Perl scopes are surrounded by curly braces. A file represents a scope.
+e.) Location of a declaration within a scope:
+  Variables may be declared anywhere within a scope.
+  
+4.2 - Global variables in C
+a.) How can they be accessed in other compilation units
+  By declaring the variable global, and then redeclaring it as extern in the other unit.
+b.) How can global variables be hidden from other compilation units
+  Variables declared 'global' can't be hidden by any standardized means, but variables intended for global
+  use may be declared in a header file which is not made available to other compilation units.
+c.) Why would you want to hide global variables
+  To avoid namespace collisions, or for security purposes
+  
+4.3 - Distinction between declarations and definitions in C/C++
+  A variable may be declared before it is defined in C/C++, in which case its value is random or null, depending
+  on the place where it was defined (random/undefined in the global scope, null within a function, struct, or class).
+  for instance, in the following code:
+   int i, j;
+   int k = 0;
+   i = j = 1;
+  i and j are declared but not defined in the first line, k is defined at the time of its declaration in the second,
+  and i and j are both defined in the last line.
+  
+4.5 - Most languages prohibit variable overloading
+a.) why can't type alone distinguish the variables?
+  a simple example of why type can't distinguish the two in a laguage that allows both variable and function overloading:
+   int a = 5;
+   String a = "hello";
+   int f(int i){ return i * i };
+   int f(String k) { return length(k) };
+   
+   print( f(a) );
+  in the above example, there's no way to distinguish based solely on type which function f should be called. This is
+  of course not a problem if the language doesn't allow function overloading. Another solution would be to define a rule
+  for which variable is used in ambiguous situations, or to give an error if the compiler/interpreter can't figure it out.
+  
+b.) why don't functions suffer the same problem?
+  They do, it's just been handled by convention. in:
+   Class A extends Object{
+    ...
+   }
+   Class B extends a{
+    ...
+   }
+   
+   void f(A foo){
+    print("foo!");
+   }
+   
+   void f(B bar){
+    print("bar?");
+   }
+   
+   B baz = new B();
+   
+   f(baz);
+  we know that f(B bar) should execute, but that's only because by convention the program will execute the most type-appropriate
+  matching function. There's no real reason that should be the case, however much sense it may make, because by the definition
+  of type inheritance baz is just as much an A as it is a B.
+  
+  More generally speaking though, it's because the type system can always tell which function should be used. as long as variable
+  names can't be overloaded a variable at a given state of execution will always have an unambiguous type, which can then be matched with
+  the appropriate function definition.
+  
+4.6 - Give three r-values that cannot be l-values in C. Give three more l-values (???). Are there l-values that cannot be r-values? Explain.
+  true, &val, 3. 
+  int a, *p, char* input.
+  A full variable declaration cannot appear as an r-value, and an uninitialized variable will have undefined behavior,
+  but other than that anything which may appear as an l-value may appear as an r-value as well.
+  
