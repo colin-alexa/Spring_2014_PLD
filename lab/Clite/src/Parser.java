@@ -42,13 +42,22 @@ public class Parser {
         for (int i=0; i<header.length; i++)   // bypass "int main ( )"
             match(header[i]);
         match(TokenType.LeftBrace);
-        // student exercise
+        Declarations d = declarations();
+        Block s = statements();
         match(TokenType.RightBrace);
-        return null;  // student exercise
+        return new Program(d, s);  // student exercise
     }
   
     private Declarations declarations () {
-        // Declarations --> { Declaration }
+    // "Note that declarations() calls declaration(ds) and that declaration(ds)
+    // does not actually return an AST node! Instead, declaration(ds) fills in 
+    // the ds ArrayList passed to it by declarations(). This only works because 
+    // Declaration is only derived from Declarations and nowhere else. Notice 
+    // that the same trick wasn't used in Statement(). I probably wouldn't have 
+    // used this trick of declaration(ds) because it breaks the uniformity of 
+    // the design and might cause trouble later if you change the grammar."
+    
+    // Declarations --> { Declaration }
         return null;  // student exercise
     }
   
@@ -67,20 +76,48 @@ public class Parser {
     private Statement statement() {
         // Statement --> ; | Block | Assignment | IfStatement | WhileStatement
         Statement s = new Skip();
-        // student exercise
+        switch (token.type()){
+          case LeftBrace:
+            match(TokenType.LeftBrace);
+            s = statements();
+            break;
+          case Identifier:
+            s = assignment();
+            break;
+          case If:
+            // do some stuff
+            
+          case While:
+            // do some stuff
+            
+          case Semicolon:
+            System.out.println("Statement parsing for token not implemented yet: "+token);
+            System.exit(1);
+            break;
+          default:
+            System.out.println("Not the start of a valid statement: "+token);
+            System.exit(1);
+        } // switch
         return s;
     }
   
     private Block statements () {
         // Block --> '{' Statements '}'
         Block b = new Block();
-        // student exercise
+        System.out.println("Calling \'statements()\' with token "+token);
+        while (token.type() != TokenType.RightBrace){
+          b.members.add(statement());
+        }
         return b;
     }
   
     private Assignment assignment () {
         // Assignment --> Identifier = Expression ;
-        return null;  // student exercise
+        Variable target = new Variable(match(TokenType.Identifier));
+        match(TokenType.Assign);
+        Expression source = expression();
+        match(TokenType.Semicolon);
+        return new Assignment(target, source);
     }
   
     private Conditional ifStatement () {
@@ -95,22 +132,22 @@ public class Parser {
 
     private Expression expression () {
         // Expression --> Conjunction { || Conjunction }
-        return null;  // student exercise
+        return conjunction ();  // student exercise; this is a cop-out
     }
   
     private Expression conjunction () {
         // Conjunction --> Equality { && Equality }
-        return null;  // student exercise
+        return equality();  // student exercise
     }
   
     private Expression equality () {
         // Equality --> Relation [ EquOp Relation ]
-        return null;  // student exercise
+        return relation();  // student exercise
     }
 
     private Expression relation (){
         // Relation --> Addition [RelOp Addition] 
-        return null;  // student exercise
+        return addition();  // student exercise
     }
   
     private Expression addition () {
@@ -168,8 +205,32 @@ public class Parser {
     }
 
     private Value literal( ) {
-        return null;  // student exercise
-    }
+        Value myVal = null;
+        switch (token.type()){
+          case IntLiteral:
+            myVal = new IntValue( Integer.parseInt(token.value()) );
+            break;
+            
+          case FloatLiteral:
+            myVal = new FloatValue( Float.parseFloat(token.value()) );
+            break;
+            
+          case CharLiteral:
+            myVal = new CharValue( token.value().charAt(0) );
+            break;
+            
+          case True:
+          case False:
+            myVal = new BoolValue( Boolean.parseBoolean(token.value()) );
+            break;
+            
+          default:
+            System.out.println("Literal evaluation not implemented for " + token.type());
+            System.exit(1);
+        } // switch
+        token = lexer.next();
+        return myVal;  // student exercise
+    } // value
   
 
     private boolean isAddOp( ) {

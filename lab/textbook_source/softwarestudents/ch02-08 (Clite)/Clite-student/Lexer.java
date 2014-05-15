@@ -64,10 +64,6 @@ public class Lexer {
             case ' ': case '\t': case '\r': case eolnCh:
                 ch = nextChar();
                 break;
-                
-            case '*':
-                ch = nextChar();
-                return Token.multiplyTok;
             
             case '/':  // divide or comment
                 ch = nextChar();
@@ -89,22 +85,8 @@ public class Lexer {
             
             case '+': ch = nextChar();
                 return Token.plusTok;
-                
-            case '-': ch = nextChar();
-                return Token.minusTok;
 
-                // ; ,  student exercise
-            case '(': ch = nextChar();
-		return Token.leftParenTok;
-		
-	    case ')': ch = nextChar();
-		return Token.rightParenTok;
-		
-	    case '{': ch = nextChar();
-		return Token.leftBraceTok;
-	
-	    case '}': ch = nextChar();
-	        return Token.rightBraceTok;
+                // - * ( ) { } ; ,  student exercise
                 
             case '&': check('&'); return Token.andTok;
             case '|': check('|'); return Token.orTok;
@@ -162,4 +144,6 @@ public class Lexer {
             tok = lexer.next( );
         } 
     } // main
+
 }
+

@@ -3,6 +3,25 @@
 
 import java.util.*;
 
+class Display {
+   static String INDENT = "  ";
+   
+   static String indent(int level){
+     StringBuilder r = new StringBuilder("");
+     for(int i=0; i<level; i++){
+       r.insert(0, INDENT);
+     }
+     return r.toString();
+   }
+   
+   static void align(StringBuilder s, int indent){
+     s.insert(0, INDENT);
+     for (int i=s.indexOf('\n'); i > -1; i = s.indexOf('\n')){
+       s.insert(i+1, INDENT);
+     }
+   }
+}
+
 class Program {
     // Program = Declarations decpart ; Block body
     Declarations decpart;
@@ -12,13 +31,40 @@ class Program {
         decpart = d;
         body = b;
     }
+    
+    public void display(){
+	System.out.print("Program (abstract syntax):\n");
+	//decpart.display(1);
+	//body.display(1);
+    }
 
 }
 
 class Declarations extends ArrayList<Declaration> {
     // Declarations = Declaration*
     // (a list of declarations d1, d2, ..., dn)
-
+    
+    public String toString(){
+      StringBuilder retval = new StringBuilder("{");
+      for ( Declaration d : this ){
+        retval.append(d);
+        retval.append(", ");
+      }
+      retval.append("}");
+      
+      return retval.toString();
+    }
+    
+    public void display(int indent){
+      StringBuilder disp;
+      
+      disp = new StringBuilder("Declarations:\n"+
+                               "Declarations= ")
+      disp.append(this.toString());
+      disp.append("\n");
+      Display.align(disp, indent);
+      System.out.print(disp);
+    }
 }
 
 class Declaration {
@@ -29,6 +75,10 @@ class Declaration {
     Declaration (Variable var, Type type) {
         v = var; t = type;
     } // declaration */
+    
+    public String toString(){
+      return "<"+v+", "+t+">";
+    }
 
 }
 
@@ -59,6 +109,15 @@ class Block extends Statement {
     // Block = Statement*
     //         (a Vector of members)
     public ArrayList<Statement> members = new ArrayList<Statement>();
+    
+    public void display(int indent){
+      StringBuilder disp = new StringBuilder("Block:\n");
+      Display.align(disp, indent);
+      System.out.print(disp);
+      for (Statement s : members){
+        s.display(indent + 1);
+      }
+    }
 
 }
 
@@ -70,6 +129,11 @@ class Assignment extends Statement {
     Assignment (Variable t, Expression e) {
         target = t;
         source = e;
+    }
+    
+    public void display(int indent){
+       StringBuilder disp = new StringBuilder("Target: " + t + "\n"+
+                                              "Source
     }
 
 }

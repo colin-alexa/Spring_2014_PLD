@@ -12,44 +12,13 @@ class Program {
         decpart = d;
         body = b;
     }
-    
-    public void display(){
-	System.out.print("Program (abstract syntax):\n"
-	decpart.display(1);
-	body.display(1);
-    }
 
 }
 
 class Declarations extends ArrayList<Declaration> {
     // Declarations = Declaration*
     // (a list of declarations d1, d2, ..., dn)
-    
-    public String toString(){
-      StringBuilder retval = new StringBuilder("{");
-      for ( Declaration d : this ){
-        retval.append(d);
-        retval.append(", ");
-      }
-      retval.append("}");
-      
-      return retval.toString();
-    }
-    
-    public void display(int indent){
-      StringBuilder headline, disp
-      
-      headline = new StringBuilder("Declarations:\n")
-      for(int i=0; i<= indent; i++){
-        headline.insert(0, "  ");
-      }
-      disp = new StringBuilder("Declarations = ");
-      disp.append(this.toString());
-      for(int i=0; i<= indent; i++){
-        disp.insert(0, "  ");
-      }
-      System.out.println(disp);
-    }
+
 }
 
 class Declaration {
@@ -60,10 +29,6 @@ class Declaration {
     Declaration (Variable var, Type type) {
         v = var; t = type;
     } // declaration */
-    
-    String toString(){
-      return "<"+v+", "+t">";
-    }
 
 }
 
@@ -94,11 +59,6 @@ class Block extends Statement {
     // Block = Statement*
     //         (a Vector of members)
     public ArrayList<Statement> members = new ArrayList<Statement>();
-    
-    public void display(int indent){
-      StringBuilder disp = new StringBuilder("Block:\n");
-      
-    }
 
 }
 
