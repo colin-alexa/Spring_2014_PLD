@@ -56,14 +56,51 @@ public class Parser {
     // that the same trick wasn't used in Statement(). I probably wouldn't have 
     // used this trick of declaration(ds) because it breaks the uniformity of 
     // the design and might cause trouble later if you change the grammar."
-    
+        Declarations decpart = new Declarations();
+        while( token.type() == TokenType.Float ||
+	      token.type() == TokenType.Char ||
+	      token.type() == TokenType.Bool ||
+	      token.type() == TokenType.Int ){
+          declaration(decpart);
+	  
+        }
     // Declarations --> { Declaration }
-        return null;  // student exercise
+        return decpart;  // student exercise
     }
   
     private void declaration (Declarations ds) {
         // Declaration  --> Type Identifier { , Identifier } ;
         // student exercise
+        Type t = null;
+        Variable i = null;
+        while ( token.type() != TokenType.Semicolon ){
+          switch (token.type()){
+            case Int:
+	      t = Type.INT;
+	      break;
+            case Float:
+              t = Type.FLOAT;
+              break;
+            case Bool:
+              t = Type.BOOL;
+              break;
+            case Char:
+              t = Type.CHAR;
+              break;
+            case Comma:
+              break;
+            case Identifier:
+              i = new Variable(token.value());
+              ds.add(new Declaration(i, t));
+              break;
+            default:
+              error("declaration");
+          }
+          if (t == null)
+            error("type (Int, Float, Bool, Char)");
+          token = lexer.next();
+        }
+        match(TokenType.Semicolon);
     }
   
     private Type type () {
@@ -78,21 +115,22 @@ public class Parser {
         Statement s = new Skip();
         switch (token.type()){
           case LeftBrace:
-            match(TokenType.LeftBrace);
+            match(token.type());
             s = statements();
             break;
           case Identifier:
             s = assignment();
             break;
           case If:
-            // do some stuff
-            
+            match(token.type());
+            s = ifStatement();
+            break;            
           case While:
-            // do some stuff
-            
+            match(token.type());
+            s = whileStatement();
+            break;            
           case Semicolon:
-            System.out.println("Statement parsing for token not implemented yet: "+token);
-            System.exit(1);
+            match(token.type());
             break;
           default:
             System.out.println("Not the start of a valid statement: "+token);
@@ -122,32 +160,78 @@ public class Parser {
   
     private Conditional ifStatement () {
         // IfStatement --> if ( Expression ) Statement [ else Statement ]
-        return null;  // student exercise
+        Conditional e;
+        Expression test;
+        Statement tbranch, ebranch;
+        match(TokenType.LeftParen);
+        test = expression();
+        match(TokenType.RightParen);
+        tbranch = statement();
+        ebranch = null;
+        token = lexer.next();
+        if (token.type().equals(TokenType.Else))
+          ebranch = statement();
+        
+        if (ebranch != null)
+          e = new Conditional(test, tbranch, ebranch);
+        else
+          e = new Conditional(test, tbranch);
+        return e;  // student exercise
     }
   
     private Loop whileStatement () {
         // WhileStatement --> while ( Expression ) Statement
-        return null;  // student exercise
+        Expression test;
+        Statement body;
+        match(TokenType.LeftParen);
+        test = expression();
+        match(TokenType.RightParen);
+        body = statement();
+        return new Loop(test, body);  // student exercise
     }
 
     private Expression expression () {
         // Expression --> Conjunction { || Conjunction }
-        return conjunction ();  // student exercise; this is a cop-out
+        Expression e = conjunction();
+        while (token.type().equals(TokenType.Or)) {
+            Operator op = new Operator(match(token.type()));
+            Expression term2 = conjunction();
+            e = new Binary(op, e, term2);
+        }  // student exercise
+        return e;
     }
   
     private Expression conjunction () {
-        // Conjunction --> Equality { && Equality }
-        return equality();  // student exercise
+        // Conjunction --> Equality { && Equality } 
+        Expression e = equality();
+        while (token.type().equals(TokenType.And)) {
+            Operator op = new Operator(match(token.type()));
+            Expression term2 = equality();
+            e = new Binary(op, e, term2);
+        }  // student exercise
+        return e;
     }
   
     private Expression equality () {
-        // Equality --> Relation [ EquOp Relation ]
-        return relation();  // student exercise
+        // Equality --> Relation [ EquOp Relation ] 
+        Expression e = relation();
+        if (isEqualityOp()) {
+            Operator op = new Operator(match(token.type()));
+            Expression term2 = relation();
+            e = new Binary(op, e, term2);
+        }  // student exercise
+        return e;
     }
 
     private Expression relation (){
         // Relation --> Addition [RelOp Addition] 
-        return addition();  // student exercise
+        Expression e = addition();
+        if (isRelationalOp()) {
+            Operator op = new Operator(match(token.type()));
+            Expression term2 = addition();
+            return new Binary(op, e, term2);
+        }  // student exercise
+        return e;
     }
   
     private Expression addition () {
@@ -229,9 +313,8 @@ public class Parser {
             System.exit(1);
         } // switch
         token = lexer.next();
-        return myVal;  // student exercise
+        return myVal;
     } // value
-  
 
     private boolean isAddOp( ) {
         return token.type().equals(TokenType.Plus) ||
