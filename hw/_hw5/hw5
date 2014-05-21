@@ -1,1 +1,85 @@
 5.1, 5.2, 5.3, 5.5, [5.7], 5.9, 5.14, 5.19
+
+5.1 - CPython 2.7 doesn't have basic data types in the sense that other
+   languages might--there's no correspondence between what types are built in to the langauge
+   and the types supported by operations on the native machine. There is also
+   no particular effort put into representing e.g. integers in an efficient way
+   if that representation would break the consistency of the object oriented type system.
+   Python ints and floats are represented using an underlying BigNum type, an analogue to
+   Java's BigInteger type, which prevents overflow and underflow errors and allows "arbitrary"
+   precision, although it is still impossible to represent some quantities accurately using
+   floating point numbers, obviously. a little testing using the sys.getsize function, which
+   returns the number of bytes being used on a specific object including GC overhead, suggests
+   that the smallest size for an int or float is 24 bytes. Characters are really just strings
+   of length one (38 bytes), but each additional character in a string costs only one byte.
+   
+5.2 - In Python True and False can be treated just like 1 and 0, repectively. True compares > False,
+   True + 1 = 2, More interesting are the things that can be treated like True or False. Most values
+   of the builtin types and most user defined classes are "True" for boolean tests, but all the 
+   0-cardinality values (None, the empty string, the empty list, integer 0, float 0, etc.) are "False".
+   The former design decision appears to be a pretty much useless holdover from C, but the latter decision
+   makes a lot of sense to me. I think it's pretty meaningless to apply integer operations to boolean values;
+   I do think it's useful and interesting to interpret 0 as False and all other values as True, which in
+   turn naturally extends to using the cardinality function to interpret a non-scalar type as an integer.
+   I don't know how I feel about None as a special case though.
+   
+5.3 - The fact that Java doesn't allow non boolean types to serve as conditions in a boolean statement
+   would seem a bit more meaningful if the language didn't allow implicit type conversion basically everywhere
+   else. Among basic types there is a lot of implicit conversion among integral types (int -> char) and numeric
+   types (int -> float). I think a more reasonable compromise would be to allow objects to define for themselves
+   how to be interpreted in a boolean context, much like the toString method, inherited from the Object superclass,
+   allows objects to define their own string representation for under-the-hood conversions.
+   
+5.5 - IEEE floating point representation for 0.2? 0.5, 0.3, 0.1?
+   0x3e4ccccd
+   0x3f000000
+   0x3e99999a
+   0x3dcccccd
+   
+5.9 - Endianness is the property of a computer architecture which defines the order that the bits of representing
+   numeric data are laid out in memory. In a big-endian architecture (intel x86), the most significant bits are stored in the
+   lowest numbered memory locations. In a little-endian architecture (motorola 6800), the least significant bits are in the lowest
+   numbered memory locations.
+   
+5.14 - The C code
+
+   int main(void){
+     char a[20];
+     char b[20];
+     a = b;
+   }
+   raises a compiler error at the assignment statement. Give two possible interpretations of the assignment and for each one modify
+   either the declarations or the assignment to match the interpretation.
+   
+   a = b suggests changing a to point to the address pointed to by b. In this case, a should be an ordinary pointer and not an array,
+   int main(void){
+     char *a;
+     char b[20];
+     a = b;
+   }
+   
+   alternatively, you could be trying to copy the array b into a, in which case you would use
+   int main(void){
+     char a[20];
+     char b[20];
+     int i;
+     for (i=0;i<20; ++i){
+       a[i] = b[i];
+     }
+   }
+   
+5.19 - Structs in the clite grammar
+
+a struct in C is a type statement, and may go anywhere a type would go, and only in those places. The simplest way to 
+
+Concrete syntax changes:
+struct ::= "struct" "{" declarations "}"
+type ::= "int" | "float" | "char" | "bool" | struct
+fieldident ::= identifier "." identifier
+identifier ::= letter { letter | digit } | fieldident
+
+Abstract syntax changes (here :myvar represents a variable myvar of the preceding type):
+Struct = declarations :fields
+Type = "int" | "float" | "char" | "bool" | Struct
+FieldRef = VariableRef :struct, String :fieldId
+VariableRef = Variable | ArrayRef | FieldRef
