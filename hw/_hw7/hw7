@@ -1,1 +1,59 @@
 7.4, 7.8, 7.16 (design only)
+
+7.4 - how many meanings could the expression (x + y/2) have in C, depending on the typs of y and x?
+  ummm, excluding meanings that are fundamentally equivalent but include implicit
+  type conversions I see 4:
+  - float div, float plus
+  - int div, float plus
+  - int div, int plus
+  - int div, pointer plus
+  
+7.8 -
+  yes, both programs worked identically and had identical results
+  
+#include <stdio.h>
+
+int main(){
+  long int a = 1 << 30;
+  a += 65534;
+  printf("%ld", a);
+  
+  a = (long int) (a + 1.0);
+  a -= 1;
+  printf(" -> %ld\n", a);
+}
+
+
+public class test{
+  public static void main(String[] args){
+    int a = 1 << 30;
+    a += 65534;
+    System.out.printf("%d", a);
+    
+    a = (int) (a + 1.0);
+    a -= 1;
+    System.out.printf(" -> %d\n", a);
+  }
+}
+
+7.16 -
+  public Stack(int limit){
+   this.stack = new int[limit];
+  }
+  
+  public push(int item) throws StackOverflowException {
+    if (top < (stack.length -1))
+      stack[top++] = item;
+    else
+      throw new StackOverflowException("push on full stack");
+  }
+  
+  public static main(String[] args){
+    Stack a = new Stack(-1); 	//  	will throw exception from array initialization
+    Stack b = new Stack(0);  	//   	should this be allowed?
+    Stack c = new Stack(1);
+    
+    c.push(1);
+    b.push(1);			//	Stack overflow
+  }
+  

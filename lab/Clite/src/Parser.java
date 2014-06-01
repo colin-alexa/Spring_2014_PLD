@@ -142,7 +142,6 @@ public class Parser {
     private Block statements () {
         // Block --> '{' Statements '}'
         Block b = new Block();
-        System.out.println("Calling \'statements()\' with token "+token);
         while (token.type() != TokenType.RightBrace){
           b.members.add(statement());
         }

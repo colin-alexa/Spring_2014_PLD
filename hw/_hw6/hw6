@@ -1,2 +1,66 @@
 6.4, 6.6, 6.10, 6.11, 6.12
 
+6.4 - valid trees are shown in 6.4.png
+ (d) would require a narrowing conversion from float -2.5 to an int for int= operation.
+ (k) would require a narrowing conversion from float to bool for the ifStatement test.
+
+6.6 - modify type rule 6.5 to support implicit c2i and i2f conversions
+ Type rule 6.5.1
+ 1. a value is valid
+ 2. a variable is valid if its id appears in the type map
+ 3. a binary is valid if all of the following are true:
+  its term1 and term2 are valid
+  if its binaryOp is arithmetic, expressions are some combination of int and char or some combination of int and float
+  if op is comparative both expressions have the same type, or expressions have types int and float, int and char, or char and float
+  if op is boolean both expressions are bool
+ 4. a unary is valid if all of the following are true:
+  its expression term is valid
+  if its unaryOp op is ! then term must be bool
+  if op is - then term must be int or float
+  if op is float() or char() and term is type int or char
+  if op is int() then term must be of type float, int, or char
+
+6.10 - modify function V to accommodate the changes to the type rule
+ V:Expression x TypeMap -> Bool
+ V(Expression e, TypeMap tm)
+ case:
+  e of type Value -> true
+  e of type Variable -> (e in tm.keys)
+  e of type Binary && e.op in ArithmeticOps ->
+      V(e.term1, tm) && V(e.term2, tm) && (type of e.term1 != Bool && type of e.term2 != Bool) &&
+      ( (type of e.term1 in [int, char] && typeof e.term2 in [int, char]) ||
+        (type of e.term1 in [int, float] && typeof e.term2 in [int, float]) ||
+        (type of e.term1 == type of e.term2) )
+  e of type Binary && e.op in ConditionalOps ->
+      V(e.term1, tm) && V(e.term2, tm) && (type of e.term1 == type of e.term2)
+  e of type Binary && e.op in BooleanOps ->
+      V(e.term1, tm) && V(e.term2, tm) && (type of e.term1 == Bool && type of e.term2 == Bool)
+  e of type Unary ->
+      V(e.term, tm) && 
+      ((e.op == ! && type of e.term is Bool) ||
+       (e.op == - && type of e.term is in [int, float]) ||
+       (e.op == float() && type of e.term is in [int, char]) ||
+       (e.op == char() && type of e.term is int) ||
+       (e.op == int() && type of e.term is [char, float]))
+
+6.11 - 
+ Type rule 6.5
+ 1. a value is valid
+ 2. a variable is valid if its id appears in the type map
+ 3. a binary is valid if all of the following are true:
+  its term1 and term2 are valid
+  if its binaryOp is arithmetic, expressions are some combination of int and char or some combination of int and float
+  if op is comparative both expressions have the same type, or expressions have types int and float, int and char, or char and float
+  if op is boolean both expressions are bool
+ 4. a unary is valid if all of the following are true:
+  its expression term is valid
+  if its unaryOp op is ! then term must be bool
+  if op is - then term must be int or float
+  if op is float() or char() and term is type int or char
+  if op is int() then term must be of type float, int, or char
+ 5. an arrayRef is valid if:
+  index is of type int
+  index < length
+  
+6.12 -
+ the result type of an arrayRef is the type of the array.

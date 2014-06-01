@@ -18,15 +18,18 @@ public class TypeTransformer {
             Type typ2 = StaticTypeCheck.typeOf(b.term2, tm);
             Expression t1 = T (b.term1, tm);
             Expression t2 = T (b.term2, tm);
-            if (typ1 == Type.INT) 
-                return new Binary(b.op.intMap(b.op.val), t1,t2);
-            else if (typ1 == Type.FLOAT) 
-                return new Binary(b.op.floatMap(b.op.val), t1,t2);
-            else if (typ1 == Type.CHAR) 
-                return new Binary(b.op.charMap(b.op.val), t1,t2);
-            else if (typ1 == Type.BOOL) 
-                return new Binary(b.op.boolMap(b.op.val), t1,t2);
-            throw new IllegalArgumentException("should never reach here");
+            if (typ1 == typ2) {
+	      if (typ1 == Type.INT) 
+		  return new Binary(b.op.intMap(b.op.val), t1,t2);
+	      else if (typ1 == Type.FLOAT) 
+		  return new Binary(b.op.floatMap(b.op.val), t1,t2);
+	      else if (typ1 == Type.CHAR) 
+		  return new Binary(b.op.charMap(b.op.val), t1,t2);
+	      else if (typ1 == Type.BOOL) 
+		  return new Binary(b.op.boolMap(b.op.val), t1,t2);
+	      throw new IllegalArgumentException("should never reach here");
+            }
+            //implicit type conversion goes here
         }
         // student exercise
         throw new IllegalArgumentException("should never reach here");
@@ -83,15 +86,15 @@ public class TypeTransformer {
     public static void main(String args[]) {
         Parser parser  = new Parser(new Lexer(args[0]));
         Program prog = parser.program();
-        // prog.display();           // student exercise
+        prog.display();           // student exercise
         System.out.println("\nBegin type checking...");
         System.out.println("Type map:");
         TypeMap map = StaticTypeCheck.typing(prog.decpart);
-        // map.display();    // student exercise
+        map.display();    // student exercise
         StaticTypeCheck.V(prog);
         Program out = T(prog, map);
         System.out.println("Output AST");
-        // out.display();    // student exercise
+        out.display();    // student exercise
     } //main
 
     } // class TypeTransformer

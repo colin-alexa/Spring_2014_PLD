@@ -1,4 +1,6 @@
 int main ( ) {
+  int n, i;
+  float f;
   n = 3;
   i = 1;
   f = 1.0;
