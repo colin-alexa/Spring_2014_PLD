@@ -21,7 +21,7 @@
   if op is int() then term must be of type float, int, or char
 
 6.10 - modify function V to accommodate the changes to the type rule
- V:Expression x TypeMap -> Bool
+ V:Expression, TypeMap -> Bool
  V(Expression e, TypeMap tm)
  case:
   e of type Value -> true
