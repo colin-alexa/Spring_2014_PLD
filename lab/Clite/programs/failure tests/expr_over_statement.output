@@ -1,0 +1,2 @@
+java -cp .:./classes Parser programs/failure\ tests/expr_over_statement.cpp
+Syntax error: expecting: Identifier | Literal | ( | Type; saw: if

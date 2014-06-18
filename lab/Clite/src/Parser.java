@@ -73,8 +73,7 @@ public class Parser {
         // student exercise
         Type t = null;
         Variable i = null;
-        while ( token.type() != TokenType.Semicolon ){
-          switch (token.type()){
+        switch (token.type()){
             case Int:
 	      t = Type.INT;
 	      break;
@@ -87,18 +86,24 @@ public class Parser {
             case Char:
               t = Type.CHAR;
               break;
-            case Comma:
-              break;
+              
+            default:
+              error("type (int, float, bool, char)");
+              
+        }
+        token = lexer.next();
+        if (token.type() != TokenType.Identifier )
+              error("Identifier");
+        while ( token.type() != TokenType.Semicolon ){
+           switch (token.type()){
             case Identifier:
               i = new Variable(token.value());
               ds.add(new Declaration(i, t));
               break;
-            default:
-              error("declaration");
-          }
-          if (t == null)
-            error("type (Int, Float, Bool, Char)");
-          token = lexer.next();
+            case Comma:
+              break;
+           } 
+           token = lexer.next();
         }
         match(TokenType.Semicolon);
     }
@@ -117,6 +122,7 @@ public class Parser {
           case LeftBrace:
             match(token.type());
             s = statements();
+            match(TokenType.RightBrace);
             break;
           case Identifier:
             s = assignment();
@@ -133,16 +139,29 @@ public class Parser {
             match(token.type());
             break;
           default:
-            System.out.println("Not the start of a valid statement: "+token);
-            System.exit(1);
+            error("Statement");
         } // switch
         return s;
+    }
+    
+    private boolean isStatement() {
+      switch (token.type()){
+        case LeftBrace:
+        case While:
+        case Identifier:
+        case If:
+        case Semicolon:
+          return true;
+        
+        default:
+          return false;
+      }
     }
   
     private Block statements () {
         // Block --> '{' Statements '}'
         Block b = new Block();
-        while (token.type() != TokenType.RightBrace){
+        while (isStatement()){
           b.members.add(statement());
         }
         return b;
@@ -167,7 +186,7 @@ public class Parser {
         match(TokenType.RightParen);
         tbranch = statement();
         ebranch = null;
-        token = lexer.next();
+////////////////////////////////////////////token = lexer.next();
         if (token.type().equals(TokenType.Else))
           ebranch = statement();
         

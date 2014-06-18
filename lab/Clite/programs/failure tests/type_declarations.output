@@ -1,0 +1,2 @@
+java -cp .:./classes Parser programs/failure\ tests/type_declarations.cpp
+Syntax error: expecting: Identifier; saw: ;

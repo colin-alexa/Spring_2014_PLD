@@ -1,0 +1,2 @@
+$ java -cp .:./classes Parser programs/failure\ tests/keywords.cpp
+Syntax error: expecting: declaration; saw: if
