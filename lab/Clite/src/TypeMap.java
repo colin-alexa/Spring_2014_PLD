@@ -6,7 +6,7 @@ public class TypeMap extends HashMap<Variable, Type> {
 // Plus a 'display' method to facilitate experimentation.
  void display(){
    for (Map.Entry<Variable, Type> e : this.entrySet()){
-     System.out.println(e.getKey() + " : " + e.getValue());
+     System.out.println(e.getKey() + ", " + e.getValue());
    }
  }
 
